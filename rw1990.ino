@@ -1,4 +1,5 @@
 #include <OneWire.h>
+#define vcc 11
 #define pin 12
 
 OneWire ibutton (pin); // I button connected on PIN 2.
@@ -6,28 +7,18 @@ OneWire ibutton (pin); // I button connected on PIN 2.
 byte addr[8]; //array to store the Ibutton ID.
 
 // Hardcode here your desired ID
-// 01 D5 9F DC 02 00 00 96
-byte newID[8] = {0x01, 0x4A, 0x24, 0xB3, 0x0F, 0x00, 0x00, 0x26};
+// 01 23 45 67 89 AB CD EF
+byte newID[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
 int writeBit(bool data)
 {
-  if(data)
-  {
-    digitalWrite(pin, LOW);
-    pinMode(pin, OUTPUT);
-    delayMicroseconds(10);
-    pinMode(pin, INPUT);
-    digitalWrite(pin, HIGH);
-    delay(10);
-  } else
-  {
-    digitalWrite(pin, LOW);
-    pinMode(pin, OUTPUT);
-    delayMicroseconds(60);
-    pinMode(pin, INPUT);
-    digitalWrite(pin, HIGH);
-    delay(10);
-  }
+  digitalWrite(pin, LOW);
+  pinMode(pin, OUTPUT);
+  if(data) delayMicroseconds(10);
+    else delayMicroseconds(60);
+  pinMode(pin, INPUT);
+  digitalWrite(pin, HIGH);
+  delay(10);
 }
 
 int writeByte(byte data)
@@ -35,23 +26,13 @@ int writeByte(byte data)
   int data_bit;
   for(data_bit=0; data_bit<8; data_bit++)
   {
-    if(data & 1)
-    {
-      digitalWrite(pin, LOW);
-      pinMode(pin, OUTPUT);
-      delayMicroseconds(60);
-      pinMode(pin, INPUT);
-      digitalWrite(pin, HIGH);
-      delay(10);
-    } else
-    {
-      digitalWrite(pin, LOW);
-      pinMode(pin, OUTPUT);
-      delayMicroseconds(10);
-      pinMode(pin, INPUT);
-      digitalWrite(pin, HIGH);
-      delay(10);
-    }
+    digitalWrite(pin, LOW);
+    pinMode(pin, OUTPUT);
+    if(data & 1) delayMicroseconds(60);
+      else delayMicroseconds(10);
+    pinMode(pin, INPUT);
+    digitalWrite(pin, HIGH);
+    delay(10);
     data = data >> 1;
   }
   return 0;
@@ -59,9 +40,10 @@ int writeByte(byte data)
 
 void setup()
 {
- Serial.begin(9600); 
- pinMode(11, OUTPUT);
- digitalWrite(11, HIGH);
+ Serial.begin(9600);
+ 
+ pinMode(vcc, OUTPUT);
+ digitalWrite(vcc, HIGH);
 }
 
 void loop()
