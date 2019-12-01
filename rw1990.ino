@@ -1,8 +1,8 @@
 #include <OneWire.h>
-#define vcc 11
-#define pin 12
+#define VCC 11
+#define PIN 12
 
-OneWire ibutton (pin); // I button connected on PIN 2.
+OneWire ibutton (PIN); // I button connected on PIN
 
 byte addr[8]; //array to store the Ibutton ID.
 
@@ -10,28 +10,17 @@ byte addr[8]; //array to store the Ibutton ID.
 // 01 23 45 67 89 AB CD EF
 byte newID[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 
-int writeBit(bool data)
-{
-  digitalWrite(pin, LOW);
-  pinMode(pin, OUTPUT);
-  if(data) delayMicroseconds(10);
-    else delayMicroseconds(60);
-  pinMode(pin, INPUT);
-  digitalWrite(pin, HIGH);
-  delay(10);
-}
-
 int writeByte(byte data)
 {
   int data_bit;
   for(data_bit=0; data_bit<8; data_bit++)
   {
-    digitalWrite(pin, LOW);
-    pinMode(pin, OUTPUT);
+    digitalWrite(PIN, LOW);
+    pinMode(PIN, OUTPUT);
     if(data & 1) delayMicroseconds(60);
       else delayMicroseconds(10);
-    pinMode(pin, INPUT);
-    digitalWrite(pin, HIGH);
+    pinMode(PIN, INPUT);
+    digitalWrite(PIN, HIGH);
     delay(10);
     data = data >> 1;
   }
@@ -42,8 +31,8 @@ void setup()
 {
  Serial.begin(9600);
  
- pinMode(vcc, OUTPUT);
- digitalWrite(vcc, HIGH);
+ pinMode(VCC, OUTPUT);
+ digitalWrite(VCC, HIGH);
 }
 
 void loop()
@@ -88,7 +77,7 @@ void loop()
     ibutton.write(0xD1);
     
     // send logical 0
-    writeBit(0);
+    ibutton.write_bit(0x00);
     
     Serial.print('\n');
     Serial.print("  Writing iButton ID:\n    ");
@@ -113,6 +102,6 @@ void loop()
     ibutton.write(0xD1);
     
     //send logical 1
-    writeBit(1);
+    ibutton.write_bit(0x01);
   }
 } 
