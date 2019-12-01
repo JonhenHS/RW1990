@@ -1,5 +1,5 @@
 #include <OneWire.h>
-#define VCC 11
+
 #define PIN 12
 
 OneWire ibutton (PIN); // I button connected on PIN
@@ -30,9 +30,6 @@ int writeByte(byte data)
 void setup()
 {
  Serial.begin(9600);
- 
- pinMode(VCC, OUTPUT);
- digitalWrite(VCC, HIGH);
 }
 
 void loop()
